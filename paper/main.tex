@@ -1,0 +1,665 @@
+\documentclass[11pt]{article}
+\usepackage[a4paper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage{amsmath,amssymb,amsthm,mathtools}
+\usepackage{microtype}
+\usepackage[numbers]{natbib}
+\usepackage{hyperref}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newcommand{\bond}{\operatorname{bond}}
+\newcommand{\poly}{\operatorname{poly}}
+\title{Packing circuits below the corank: a kernel for binary matroids and edge-disjoint bond packing}
+\author{Rong Zhou}
+\date{}
+\begin{document}
+\maketitle
+
+\begin{abstract}
+For a matroid $M$, let $\nu(M)$ be the maximum number of pairwise
+element-disjoint circuits and let $\delta(M)=r^*(M)-\nu(M)$, where $r^*$ is
+the corank.  We give a polynomial-time kernelization for deciding
+$\delta(M)\leq k$ on binary matroids supplied by a binary representation.
+Its element bound is $2^{O(4^k)}$; this is a double-exponential bound.
+The argument combines a counting lemma valid for every matroid, an
+exchange rule for repeated binary circuit profiles, and contraction of
+series pairs.  For simple graphs we also give a direct treatment of
+edge-disjoint bonds: every two-connected block $H$ on at least three
+vertices satisfies $\tau(H)\leq4\delta_{\bond}(H)$.  A false-twin
+surplus rule yields a $2^{O(k)}$-vertex kernel using independent block
+copies.
+\end{abstract}
+
+\section{Introduction}
+Every circuit of $M$ contains an element outside any fixed basis, so
+$\nu(M)\leq r^*(M)$.  We study the amount by which the maximum packing
+falls below this elementary upper bound.  For the graphic case, where
+$r^*$ is the cyclomatic number and circuits are cycles,
+Harant et al.~\citep[Theorem~3]{Harant2010} proved that for each fixed
+$k$ the relevant reduced graphs form a finite family, which yields
+fixed-parameter tractability for this graphic case.  The present binary
+representation permits circuits beyond graphic matroids.
+Rautenbach and Regen~\citep{RautenbachRegen2012} study the distinct
+vertex-disjoint cycle variant.  The dual of a graphic matroid gives a
+second motivating case: its circuits are graph bonds, and its corank is
+$|V|-c(G)$.  Every nonempty cut contains a bond, so replacing each
+member of an edge-disjoint cut packing by a contained bond preserves
+the packing size; the two maximum packing numbers are equal.  Cut
+packing was studied by Caprara, Panconesi, and Rizzi~\citep{Caprara2004}.
+
+Put
+\begin{equation}\label{eq:g}
+ g(k)=2k+2^{2k}+2k\,2^{2^{2k}}2^{2k}\qquad(k\geq0).
+\end{equation}
+In particular $g(k)=2^{4^k+O(k)}$ for positive $k$.
+
+\begin{theorem}[Binary-matroid kernel]\label{thm:main}
+Given a binary matrix $A$ representing $M$ and
+$k\in\mathbb Z_{\geq0}$, there is a polynomial-time algorithm, measured
+in the input encoding length $L$, that outputs an equivalent instance
+$(A',k')$ with $k'\leq k$ and at most $\max\{3,g(k)\}$ elements.
+After row reduction, $A'$ has $O(\max\{3,g(k)\}^2)$ bits.  The problem
+is fixed-parameter tractable.  For $k<0$, the algorithm outputs a
+fixed NO instance.
+\end{theorem}
+
+\begin{theorem}[Bond packing]\label{thm:bond-main}
+Let $G$ be a finite simple graph, and let $\nu_{\bond}(G)$ be the maximum
+number of pairwise edge-disjoint bonds.  With
+$\delta_{\bond}(G)=|V(G)|-c(G)-\nu_{\bond}(G)$, deciding
+$\delta_{\bond}(G)\leq k$ is fixed-parameter tractable and has a
+$2^{O(k)}$-vertex kernel.  Every two-connected block $H$ on at least
+three vertices satisfies $\tau(H)\leq4\delta_{\bond}(H)$.
+\end{theorem}
+
+The binary-matroid proof does not rely on recognizing an optimal packing:
+it finds a small set of exceptional nonbasis elements by vertex cover.
+Since a cographic matroid is binary, the FPT assertion of
+Theorem~\ref{thm:bond-main} also follows from Theorem~\ref{thm:main}
+via a polynomial-time binary representation.  The direct graph proof
+gives the vertex-cover bound and the smaller vertex kernel: in a YES
+instance at most $k$ nontrivial blocks survive, each with at most
+$4k\,2^{4k-1}$ vertices.
+
+\section{Preliminaries}\label{sec:prelim}
+All matroids are finite.  A circuit is a minimal dependent set, and
+$B$ denotes a basis.  Write $B^*=E(M)\setminus B$, so
+$|B^*|=r^*(M)=|E(M)|-r(M)$.  For $e\in B^*$ let $C(e,B)$ denote its
+fundamental circuit.  Loops and coloops are allowed.  The binary input
+representation permits Gaussian elimination, construction of a basis,
+contraction, and computation of fundamental circuits in polynomial time.
+
+A \emph{cycle} of a binary matroid means a vector of its binary circuit
+space, identified with its support.  This includes the empty cycle.
+Addition is symmetric difference.  The fundamental circuits relative
+to $B$ form a vector-space basis: each contains exactly one element of
+$B^*$, namely its index.  Every nonempty cycle is an element-disjoint
+union of circuits.  Contraction by a set projects the cycle space onto
+the coordinates outside that set.  These facts follow as well by writing
+a binary representation in basis form and taking its nullspace.
+
+We use two elementary reductions.  (R1) Delete a coloop.  (R2) If
+$\{x,y\}$ is a two-element cocircuit, contract one member.  Both preserve
+$\delta$.  For R1, no circuit uses the coloop and both $r^*$ and $\nu$
+are unchanged.  For R2, binary circuit--cocircuit orthogonality says
+that every cycle contains $x$ if and only if it contains $y$.
+Projection deleting the $x$ coordinate is injective on the cycle space:
+an element of its kernel would be the singleton cycle $\{x\}$, which
+cannot contain $x$ without $y$.  Membership of $x$ is recovered from
+membership of $y$, so support containment and disjointness are preserved
+in both directions.  The projection therefore bijects circuits and
+their disjoint packings.  It preserves the circuit-space dimension
+$r^*$ and the optimum $\nu$.  The pair may lie inside a larger
+component; R2 contracts one member.
+
+For a graph, a bond is a minimal nonempty edge cut.  Equivalently, in a
+connected component it is a cut $\partial(S)$ for which both shores
+induce connected graphs.  The two definitions agree: if one shore is
+disconnected, the edges leaving one of its components form a proper
+nonempty cut subset; conversely, if both shores are connected, omitting
+any cut edge reconnects the shores, so no proper subset is a cut.
+We write $\tau(G)$ for the minimum vertex-cover size.  A two-connected
+block below always has at least three vertices; bridge blocks are treated
+separately.
+
+\section{A counting lemma for arbitrary matroids}
+\begin{lemma}\label{lem:count}
+For any matroid $M$, any basis $B$, and any maximum circuit packing
+$\mathcal P$, let $q$ be the number of packed circuits containing at
+least two members of $B^*$.  Then $q\leq\delta(M)$.  The other packed
+circuits are pairwise disjoint fundamental circuits $D_i=C(e_i,B)$.
+If $F=B^*\setminus\{e_i\}$, then
+\begin{equation}\label{eq:count}
+ |F|=\delta(M)+q\leq2\delta(M).
+\end{equation}
+\end{lemma}
+\begin{proof}
+A circuit cannot lie in the independent set $B$, so every packed
+circuit contains at least one member of $B^*$.  Put
+$a_C=|C\cap B^*|$.  Since the packing is element-disjoint,
+$\sum_{C\in\mathcal P}a_C\leq|B^*|=\nu(M)+\delta(M)$.
+Since every $a_C\geq1$ and $q$ of them are at least two, the same sum
+is at least $\nu(M)+q$.  Thus $q\leq\delta(M)$.  If $a_C=1$ with
+$C\cap B^*=\{e\}$, then $C\subseteq B\cup\{e\}$ and uniqueness of
+the circuit in $B\cup\{e\}$ gives $C=C(e,B)$.  There are
+$\nu(M)-q$ such circuits, with distinct indexing elements and disjoint
+supports.  Subtracting their indexing elements from $B^*$ gives
+$|F|=r^*(M)-(\nu(M)-q)=\delta(M)+q$.
+\end{proof}
+
+\section{An exchange lemma for repeated binary profiles}\label{sec:exchange}
+Fix a basis $B$ of a binary matroid and \emph{any} pairwise disjoint
+family $D_i=C(e_i,B)$ indexed by $I$; this family need not be optimal.
+Write
+\[
+ D_i=\{e_i\}\mathbin{\dot\cup}P_i,\quad
+ F=B^*\setminus\{e_i:i\in I\},\quad
+ P_0=B\setminus\bigcup_{i\in I}P_i,
+\]
+and, for $f\in F$,
+\[
+ C(f,B)=\{f\}\mathbin{\dot\cup}R_f
+             \mathbin{\dot\cup}\bigsqcup_{i\in I}A_{fi},
+ \qquad R_f\subseteq P_0,\quad A_{fi}\subseteq P_i.
+\]
+For $x\in P_i$ define its full signature
+$s_i(x)=\{f\in F:x\in A_{fi}\}$.  The \emph{profile} of $D_i$ is the
+multiset of these signatures for $x\in P_i$, with the labels of $F$
+fixed.  Keeping the entire joint signature, rather than only the
+individual cardinalities $|A_{fi}|$, is essential.
+
+\begin{lemma}[Exchange or H1]\label{lem:exchange}
+If $T\subseteq I$ consists of $t$ circuits with the same profile and
+$t>|F|$, then for any $i_0\in T$,
+\[
+ \nu(M/D_{i_0})=\nu(M)-1,
+ \qquad \delta(M/D_{i_0})=\delta(M).
+\]
+\end{lemma}
+\begin{proof}
+Put $h=|F|$ and $D=D_{i_0}$.  First assume $h\geq1$, so after the
+contraction there are $s=t-1\geq h\geq1$ retained circuits of type
+$T$.  Equality of signature multisets supplies a common position set
+$L$ and bijections $\phi_i:L\to P_i$ such that the signature at a
+given position is the same in every $P_i$.  For $Z\subseteq F$ put
+$a_i(Z)=\mathop{\triangle}_{f\in Z}A_{fi}$.  Under $\phi_i$, all sets
+$a_i(Z)$ correspond to the same subset $a(Z)\subseteq L$; in
+particular they are simultaneously empty or nonempty.
+
+Every cycle $X$ of $M$ has a unique expression
+\begin{equation}\label{eq:cycleexp}
+ X=\mathop{\triangle}_{f\in Z}C(f,B)\ \triangle\
+   \mathop{\triangle}_{i\in I:u_i=1}D_i,
+ \qquad Z=X\cap F,
+ \quad u_i=\mathbf 1_{e_i\in X}.
+\end{equation}
+Only the indicated fundamental circuits meet $D_i$, hence
+\begin{equation}\label{eq:local}
+ X\cap D_i=\begin{cases}a_i(Z),&u_i=0,\\
+                         D_i\setminus a_i(Z),&u_i=1.
+          \end{cases}
+\end{equation}
+When $a(Z)\ne\varnothing$, both alternatives in
+\eqref{eq:local} are nonempty: $a_i(Z)\subseteq P_i$ while the other
+alternative contains $e_i$.  Also $Z\ne\varnothing$.  A circuit of
+this kind meets every $T$-block and uses at least one member of $F$;
+call it \emph{crossing}.  A disjoint packing has at most $h$ crossing
+circuits, because their nonempty intersections with $F$ are disjoint,
+and it cannot simultaneously contain a $T$-block circuit.  If
+$a(Z)=\varnothing$, the circuit meets each $T$-block in either nothing
+or the whole block.  If it contains a whole block, circuit minimality
+forces it to equal that block.  Otherwise call it \emph{neutral}.
+Thus crossing, block, and neutral circuits exhaust all circuits.
+
+We next justify that the family of neutral circuits is identical in
+$M$ and $N=M/D$, as subsets of $E(M)\setminus\bigcup_{i\in T}D_i$.
+Since $D$ is a circuit, $B'=B\setminus P_{i_0}$ is a basis of $N$:
+it has $r(M)-(|D|-1)$ elements and its image spans the contraction.
+The fundamental circuits in $N$ are $C(f,B)\setminus D$ for $f\in F$
+and $D_i$ for $i\ne i_0$.  Therefore \eqref{eq:local} still holds
+on every retained block.  Take a circuit of $N$ avoiding all retained
+blocks.  On any one retained block, absence of $e_j$ gives $u_j=0$,
+and then \eqref{eq:local} gives $a_j(Z)=\varnothing$.  Profile equality
+gives $a_{i_0}(Z)=\varnothing$.  Lift its fundamental-circuit
+expression to $M$, choosing $u_{i_0}=0$; the lift has no coordinates
+on $D$, so it has precisely the original support.  It is a cycle of
+$M$.  If it contained a smaller nonempty cycle of $M$, that cycle
+would avoid $D$ and project to a smaller nonempty cycle of $N$,
+contradicting circuit minimality.  Hence it is a circuit of $M$.
+Conversely, a neutral circuit of $M$ projects without changing its
+support to a nonempty cycle of $N$.  That cycle contains a circuit of
+$N$; this circuit avoids retained blocks and so, by the preceding
+argument, is also a circuit of $M$.  Minimality in $M$ forces equality.
+The arbitrary sets $R_f$ never affect this argument: all coordinates
+outside $D$ are retained unchanged.
+
+Let $\rho$ be the maximum packing number of this common neutral
+family.  In $M$, a packing without crossing circuits has at most $t$
+block circuits and $\rho$ neutral circuits; one with crossing circuits
+has no $T$-block circuits and at most $h+\rho<t+\rho$ members.
+The $t$ disjoint block circuits together with a maximum neutral
+packing attain $t+\rho$, hence $\nu(M)=t+\rho$.  In $N$ the same
+crossing, block, and neutral trichotomy applies to the nonempty
+retained family $T\setminus\{i_0\}$ of matching profiles.  It gives
+an upper bound $\max\{s,h\}+\rho=s+\rho$, attained by
+all $s$ retained blocks and a maximum neutral packing.  Thus
+$\nu(N)=s+\rho=\nu(M)-1$.  A circuit has rank $|D|-1$, so
+\[
+ r^*(N)=(|E(M)|-|D|)-\bigl(r(M)-(|D|-1)\bigr)=r^*(M)-1.
+\]
+Subtracting packing numbers proves the second assertion.
+
+If $h=0$, all fundamental circuits are the disjoint $D_i$; basis
+elements outside them are coloops.  Every nonempty cycle is a union
+of some $D_i$, and its minimal nonempty supports are exactly the
+$D_i$.  Contracting one $D_i$ removes precisely that circuit and
+reduces both $r^*$ and $\nu$ by one.  This includes $t=1$ and a
+singleton-loop block.
+\end{proof}
+
+The strict threshold matters.  Take the binary matroid on
+$E=\{0,1,\ldots,7\}$ with basis $B=\{2,4,6,7\}$ and fundamental
+circuits $C(0,B)=\{0,2,4\}$, $C(1,B)=\{1,2,6\}$,
+$C(3,B)=\{3,4,7\}$, and $C(5,B)=\{5,6,7\}$.  These four circuits
+specify its binary cycle space.  The disjoint block circuits
+$\{1,2,6\}$ and $\{3,4,7\}$ have the same profile over
+$F=\{0,5\}$, so $t=h=2$.  Contracting either one of these two blocks
+changes $(r^*,\nu,\delta)$ from $(4,2,2)$ to $(3,2,1)$.
+Thus $t=h$ cannot replace $t>h$.
+
+\section{Kernel for binary matroids}\label{sec:kernel}
+Fix any basis $B$.  Make a conflict graph whose vertices are $B^*$:
+two vertices $e,f$ are adjacent if $C(e,B)$ and $C(f,B)$ intersect.
+An independent set is exactly a family of disjoint fundamental
+circuits; its complement is a vertex cover.
+
+\begin{lemma}[A small witness can be found]\label{lem:cover}
+If $\delta(M)\leq k$, the conflict graph has a vertex cover of size
+at most $2k$.  In time $O(4^k\poly(L))$ one can find such a
+cover, or correctly reject $\delta(M)\leq k$.
+\end{lemma}
+\begin{proof}
+Apply Lemma~\ref{lem:count} to a maximum packing relative to the
+chosen $B$.  Its good fundamental circuits are disjoint and their
+indexing vertices form an independent set; the complementary set
+$F$ is a cover of size at most $2\delta(M)\leq2k$.  This proves the
+existence statement without requiring the algorithm to find the
+maximum packing.  For the algorithm, repeatedly take an uncovered
+edge $ef$ and branch on putting $e$ or $f$ into the cover.  Each
+branch reduces the remaining budget by one; a search to depth $2k$
+has at most $2^{2k+1}-1$ nodes, and each node is processed in
+polynomial time.  Exhausting all branches proves that no such cover
+exists and hence that the instance is a NO instance.  A found cover
+is only a witness for subsequent reductions, not proof of YES.
+\end{proof}
+
+Given the cover $F$, let $I=B^*\setminus F$.  We apply R1, R2, and
+Lemma~\ref{lem:exchange} whenever their conditions hold.  The
+exchange rule compares profile multisets and contracts one whole
+block from any class occurring more than $|F|$ times.  R1 removes a
+zero coordinate column from the cycle-space representation.  R2
+contracts one member of a pair of equal nonzero columns.  Equality of
+nonzero cycle-space columns is exactly the two-element cocircuit
+condition: the corresponding coordinates agree on every cycle,
+so their pair is a cocycle, while neither singleton is a cocycle.
+When needed, these columns and profiles are obtained by linear algebra
+and sorting.  No exact computation of $\nu$ enters the reductions.
+
+The witness can be maintained.  R1 deletes a basis element because a
+nonbasis column in the fundamental-circuit representation is a
+nonzero unit column.  Every R2 pair has at least one basis element,
+since distinct nonbasis elements have distinct unit columns; choose
+that basis element for contraction.  After either operation, remove it
+from $B$ and from any affected $P_i$ or $P_0$.  The remaining
+fundamental circuits are exactly the old ones with the removed
+coordinate deleted, remain disjoint, and the labelled set $F$ is
+unchanged.  After H1 contracts $D_i=\{e_i\}\mathbin{\dot\cup}P_i$, remove
+$P_i$ from $B$ and $i$ from $I$; again $F$ remains unchanged and the
+other blocks are fundamental circuits.  Each operation removes at
+least one element.  Thus there are at most $|E(M)|$ operations and no
+loop caused by witness recomputation.
+
+\begin{lemma}[Terminal size]\label{lem:size}
+If $h=|F|\leq2k$ and none of R1, R2, H1 applies to the maintained
+witness, then $|E(M)|\leq g(k)$.
+\end{lemma}
+\begin{proof}
+Partition $E(M)=F\mathbin{\dot\cup}P_0\mathbin{\dot\cup}
+\bigsqcup_{i\in I}D_i$.
+For $x\in P_i$, its coordinate in a cycle with switches
+$(Z,(u_j))$ is $u_i+|s_i(x)\cap Z|\pmod2$; the coordinate of $e_i$
+is $u_i$.  For $x\in P_0$ it is $|s_0(x)\cap Z|\pmod2$, where
+$s_0(x)=\{f\in F:x\in R_f\}$.  These formulas follow by expanding
+\eqref{eq:cycleexp}.  A member of $P_0$ with empty signature is a
+coloop and would be removed by R1.  Two members with the same
+nonempty signature have identical nonzero columns and would trigger
+R2.  Consequently $|P_0|\leq2^h-1$.
+
+Within each $D_i$, $e_i$ supplies the empty signature.  A member of
+$P_i$ with empty signature agrees with $e_i$ on every cycle and
+would trigger R2.  Two members of $P_i$ with the same nonempty
+signature would do the same.  Hence $P_i$ contains at most one
+representative of each nonempty subset of $F$ and $|D_i|\leq2^h$.
+Its profile is now a subset of the $2^h-1$ possible nonempty
+signatures, so there are at most $2^{2^h-1}$ profiles.  Since H1 is
+inapplicable, each profile occurs at most $h$ times.  Therefore
+\[
+ |E(M)|\leq h+(2^h-1)+h\,2^{2^h-1}\,2^h
+          \leq2k+2^{2k}+2k\,2^{2^{2k}}\,2^{2k}=g(k).
+\]
+Here $g$ is a convenient upper bound.  Blocks consisting of a single
+loop have the empty profile and are included.  If
+$h=0$, no block may remain, R1 removes all of $P_0$, and the terminal
+matroid is empty; the displayed bound still holds.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:main}]
+For the FPT algorithm, find a cover using Lemma~\ref{lem:cover},
+reject if none exists, then apply safe reductions to a terminal
+instance.  Lemma~\ref{lem:exchange} and the R1/R2 arguments preserve
+$\delta$ at every step, and Lemma~\ref{lem:size} bounds the remaining
+element count by $g(k)$.  Enumerating the $2^{r^*}$ cycles of the
+terminal binary representation, retaining minimal nonzero supports,
+and checking all subsets of those supports for pairwise disjointness
+computes $\nu$ exactly in a function of $k$ times a polynomial in
+the input size.  It decides the original instance, including the
+case where a small cover exists but $\delta>k$.
+
+For a \emph{standard polynomial-time kernelization}, one further
+wraps this FPT preprocessing.  If $k<0$, return a fixed NO instance
+represented by $(U_{1,3},0)$.  For $k\geq0$ and $n=|E(M)|\leq g(k)$,
+row-reduce the representation to full row rank and return it with
+$k'=k$.  Otherwise run the cover search and reductions.  Since
+$n>g(k)\geq4^k$ for $k\geq1$, the single $4^k\poly(L)$ cover search
+costs polynomial time in the original input length; there are at most
+$n$ reduction steps, each polynomial in $L$.  For $k=0$, $g(0)=1$
+and the search has constant branching.  When the current instance
+reaches $g(k)$ elements it may be row-reduced and returned with
+$k'=k$.  If the search finds no cover, the branch is NO by
+Lemma~\ref{lem:cover}; encode it as $(U_{1,3},0)$.  This matroid has
+three parallel elements, $r^*=2$, $\nu=1$, and $\delta=1>0$.
+Its three elements explain the
+$\max\{3,g(k)\}$ bound in the statement.  The comparison with $g(k)$
+is carried out with integers saturated at $n+1$, so an enormous value
+of $g(k)$ is never explicitly constructed.  In every return branch
+the output matrix has full row rank and at most
+$O(\max\{3,g(k)\}^2)$ bits, since its rank is at most its number of
+columns.  Thus the wrapper is
+polynomial-time and gives a kernel; the exhaustive terminal solver
+proves FPT.
+\end{proof}
+
+\section{Edge-disjoint bond packing}\label{sec:bonds}
+We give a graph-specific route to Theorem~\ref{thm:bond-main}.
+We use independent copies of blocks: an articulation vertex shared by
+two blocks appears once in each block instance.
+
+\begin{lemma}[Block additivity]\label{lem:blocks}
+The bonds of a graph are precisely the bonds of its blocks,
+regarded as edge sets of the original graph.  In particular, with
+bridge blocks included,
+\[
+ \nu_{\bond}(G)=\sum_H\nu_{\bond}(H),\qquad
+ |V(G)|-c(G)=\sum_H(|V(H)|-1),\qquad
+ \delta_{\bond}(G)=\sum_H\delta_{\bond}(H).
+\]
+Every bridge block has deficit zero.
+\end{lemma}
+\begin{proof}
+It suffices to work in a connected component.  The block--cut
+incidence graph is a tree.  A simple cycle cannot enter another block
+through an articulation vertex and return without repeating that
+vertex.  Hence each cycle lies within one block, and the graphic
+cycle space is the direct sum of the cycle spaces of the
+blocks, on disjoint edge sets.  Taking orthogonal complements over
+$\mathbb F_2$, the cut space is likewise the direct sum of the block
+cut spaces.  A bond is a nonzero cut-space support minimal under
+inclusion: a nonminimal cut-space support contains a smaller nonzero
+cut support, and every nonzero cut support contains a minimal one.
+Minimal nonzero supports of a direct sum on disjoint coordinate sets
+belong to exactly one summand, proving the bond assertion.  Edge
+disjoint packings then split and combine blockwise.  The rank identity
+is obtained by adding each block to the block--cut tree: its first
+articulation vertex has already been counted and its remaining
+$|V(H)|-1$ vertices are new.  A bridge block has one edge, itself
+a bond, so both its rank contribution and packing contribution are
+one.  Summing gives the three formulas.
+\end{proof}
+
+\begin{lemma}[Vertex-cover bound]\label{lem:tau}
+If $H$ is a simple two-connected graph on at least three vertices,
+then $\tau(H)\leq4\delta_{\bond}(H)$.
+\end{lemma}
+\begin{proof}
+Let $d=\delta_{\bond}(H)$, and choose a maximum disjoint bond
+packing $\mathcal Q$ of size $|V(H)|-1-d$.  Fix a spanning tree $T$.
+Each bond meets $T$, for otherwise all its edges could be removed
+without disconnecting $T$.  If $q$ packed bonds meet $T$ in at least
+two edges, then the disjointness of the packing gives
+\[
+ |V(H)|-1\geq\sum_{Q\in\mathcal Q}|Q\cap E(T)|
+       \geq |\mathcal Q|+q=|V(H)|-1-d+q;
+\]
+thus $q\leq d$.  A packed bond meeting $T$ in exactly one edge $e$
+is the fundamental cut of $e$: no other tree edge crosses the cut,
+so each component of $T-e$ lies in one shore.  Call these
+$|\mathcal Q|-q$ tree edges good, and let $F_T$
+consist of the remaining tree edges.  Then
+$|F_T|=|V(H)|-1-(|\mathcal Q|-q)=d+q\leq2d$.
+
+The tree path of a graph edge can contain at most one good edge.
+Indeed, an edge whose path contains a good edge crosses its
+fundamental cut and belongs to the corresponding packed bond; two
+good edges on the path would place the graph edge in two disjoint
+packed bonds.  Contract each component of the forest $(V(H),F_T)$
+to a vertex.  The uncontracted good edges form a tree $Q$.  Every
+graph edge either remains inside one contracted vertex or joins
+adjacent vertices of $Q$, by the preceding path property.
+
+Consider a contracted vertex consisting of a single original vertex
+$v$; it is not incident with $F_T$.  If it had degree at least two in
+$Q$, deleting $v$ would separate the corresponding branches of
+$Q$, and no graph edge could reconnect them, since graph edges join
+only equal or adjacent $Q$ vertices.  This contradicts
+two-connectivity.  Hence every singleton contracted vertex has
+$Q$-degree at most one.  If two singleton contracted vertices were
+adjacent by an edge of $H$, they would be adjacent in $Q$.  Since
+both have degree at most one, $Q$ would consist of just these two
+vertices; as all vertices of $Q$ are singletons, $H$ would have only
+two vertices.  This is excluded.  Therefore every edge of $H$ has
+an endpoint incident with $F_T$.  The endpoints of $F_T$ form a
+vertex cover of size at most $2|F_T|\leq4d$.
+\end{proof}
+
+\begin{lemma}[False-twin surplus]\label{lem:twins}
+Let $H$ be a simple connected graph, and let $T$ be an independent
+set of $t$ vertices with the same open neighborhood $N$, of size
+$d\geq1$.  If $t>d$, deleting any one $v\in T$ preserves
+$\delta_{\bond}(H)$.
+\end{lemma}
+\begin{proof}
+For $x\in T$, put $D_x=\partial(\{x\})$.  There is another member
+of $T$, and any path segment $a-x-b$ with $a,b\in N$ can be rerouted
+as $a-y-b$ through such a member $y$.  Hence $H-x$ is connected,
+and $D_x$ is a bond.  The $D_x$ are edge-disjoint and each has $d$
+edges.
+
+Let $Q=\partial(S)$ be a bond meeting $D_x$ but unequal to it, with
+$x\in S$.  If all of $N$ lay in $S$, $Q$ would not meet $D_x$.  If
+all of $N$ lay outside $S$, then $x$ would be isolated in $H[S]$;
+connectivity of that shore would force $S=\{x\}$ and $Q=D_x$.
+Thus each shore contains a vertex of $N$, and $Q$ meets every
+$D_y$, $y\in T$.  Call $Q$ crossing.  In an edge-disjoint packing
+there are at most $d$ crossing bonds, because each uses a distinct
+edge of any fixed star $D_x$.  A crossing bond prevents the presence
+of any $D_y$.  Replacing the crossing bonds by all $t>d$ stars
+strictly increases the packing.  If there are no crossing bonds,
+the packing may be enlarged to contain every star, because every
+other packed bond avoids all star edges.  Consequently some maximum
+packing contains all $t$ stars.
+
+Let $\rho$ be the largest packing of bonds avoiding every star edge.
+A cut avoiding all star edges keeps $T\cup N$ on one shore.  Deleting
+$v$ from that shore preserves its connectivity: occurrences of $v$
+on a path can be rerouted through a remaining twin, and the other
+shore is unchanged.  Conversely, adding $v$ to the shore containing
+$T\setminus\{v\}$ and $N$ preserves both shores' connectivity.
+The cut edge set itself is unchanged.  Thus these neutral bonds,
+including their edge-disjointness relations, correspond in $H$ and
+$H-v$, and have the same packing number $\rho$.  We have
+$\nu_{\bond}(H)=t+\rho$.
+
+In $H-v$ the twin class has $t-1\geq d$ members.  Its stars are
+still bonds: when $t-1\geq2$ the same rerouting proves this, while
+the only case $t-1=1$ has $d=1$ and its star is a bridge.  The same
+crossing argument bounds their number by $d$.
+Replacing crossing bonds by all $t-1$ stars now does not decrease
+packing size, even at equality $t-1=d$.  Hence
+$\nu_{\bond}(H-v)=t-1+\rho$.  The path rerouting also shows $H-v$
+remains connected, so its rank contribution $|V|-1$ decreases by
+one.  The deficit is unchanged.
+\end{proof}
+
+For isolated false twins, deleting a vertex decreases both $|V|$
+and $c(G)$ by one and changes no bond; its deficit is unchanged.
+
+\begin{lemma}[Size of a reduced block]\label{lem:blocksize}
+Let $H$ be a two-connected simple block on at least three vertices,
+and suppose no false-twin class in this \emph{block instance} has
+size larger than its neighborhood.  Then
+$|V(H)|\leq\tau(H)2^{\tau(H)-1}$.
+\end{lemma}
+\begin{proof}
+Take a vertex cover $C$ of size $\tau=\tau(H)$, and put
+$I=V(H)\setminus C$.  The set $I$ is independent.  A two-connected
+graph on at least three vertices has minimum degree at least two,
+so every $x\in I$ has a neighborhood $S\subseteq C$ with $|S|\geq2$.
+For each such $S$, the vertices in $I$ with neighborhood $S$ are
+contained in a false-twin class, which by assumption has at most
+$|S|$ members.  These groups partition $I$; hence
+\[
+ |V(H)|\leq\tau+
+  \sum_{S\subseteq C,\,|S|\geq2}|S|
+ =\tau+(\tau2^{\tau-1}-\tau)=\tau2^{\tau-1}.
+\]
+The identity in the middle counts each vertex of $C$ in exactly
+$2^{\tau-1}$ subsets and subtracts the $\tau$ singleton subsets.
+\end{proof}
+
+\begin{proof}[Proof of Theorem~\ref{thm:bond-main}]
+Use Lemma~\ref{lem:blocks} to split $G$ into independent block
+instances, with separate copies of every articulation vertex.
+Bridge and isolated-vertex instances have zero deficit and may be
+discarded.  Within a current block, apply Lemma~\ref{lem:twins};
+if a deletion destroys two-connectivity, replace the block by its
+new independent block instances.  The deficit is unchanged by the
+surplus rule and additive under the replacement.  Every nontrivial
+deletion reduces the sum of block rank contributions
+$\sum_H(|V(H)|-1)$ by one; splitting preserves that sum.  Thus at
+most $|V(G)|-c(G)$ nontrivial deletions occur.  Block decomposition,
+twin grouping, and the graph updates take polynomial time per step.
+
+If $k<0$, reject.  If $k=0$, accept exactly when no nontrivial block
+remains: each such block has $\tau\geq2$ and
+Lemma~\ref{lem:tau} forces positive integral deficit.  For $k\geq1$,
+if more than $k$ nontrivial blocks remain, reject by additivity and
+the same positive-deficit observation.  Otherwise every surviving
+block in a YES instance has deficit at most $k$.  Lemmas
+\ref{lem:tau} and \ref{lem:blocksize} therefore bound its size by
+$N(k)=4k\,2^{4k-1}$.  If any reduced block exceeds this size, reject.
+For a kernel, output the disjoint union of the at most $k$ surviving
+nontrivial block instances, with parameter $k$.  Additivity preserves
+the deficit, and the union has at most $kN(k)=2^{O(k)}$ vertices.
+A rejected branch outputs the fixed NO instance $(K_3,0)$; when no
+nontrivial block remains, output the empty graph with parameter $0$.
+The reductions and block construction take polynomial time, with
+size comparisons saturated at the input vertex count, so this is a
+vertex kernel.
+
+For the FPT decision algorithm, on the at most $k$ remaining blocks,
+enumerate bipartitions and
+retain cuts with connected shores.  A dynamic program whose state is
+the set of edges already used either skips a bond or adds it when its
+edge set is disjoint from the state.  It finds a maximum edge-disjoint
+packing.  Each block has at most $\binom{N(k)}2$ edges and at most
+$2^{N(k)-1}$ distinct shores to inspect, so the dynamic program takes
+$2^{O(N(k)^2)}\poly(|V(G)|)$ time.  Sum the exact block deficits
+and compare with $k$.  All rejection tests are necessary for a YES
+instance, and every other step preserves or exactly computes the
+deficit; this proves the FPT assertion.
+\end{proof}
+
+The independent-copy qualification is material.  In the graph with
+edges $02$, $03$, $04$, $12$, $13$, $14$, $25$, $56$, $62$, a $K_{2,3}$ block and a
+triangle meet at vertex $2$.  Vertex $2$ belongs to a false-twin
+class within the bipartite block, but has additional neighbors in the
+whole graph.  Deleting it from the whole graph changes the deficit
+from $2$ to $1$, whereas reducing only its copy inside the bipartite
+block preserves both block deficits.
+
+\section{Computational verification}\label{sec:comp}
+The binary-matroid checks processed the complete catalogue of $3,766$
+isomorphism classes on at most ten elements and its $134,860$ bases,
+as well as constructed and random inputs with at most sixteen elements
+and selected cographic $K_{a,b}$ instances with up to $32$ elements.
+The kernel pipeline was checked on $4,021$ inputs, each at
+$k=\delta$ and $k=\delta-1$, for $8,042$ parameter choices.  The
+input deficits $0,1,2,3,4,5,6$ occurred respectively $478,1264,1633,
+564,54,21,7$ times.  There were $15,716$ local checks: $14,344$
+pipeline reductions and $1,372$ nonminimum-cover H1 targets, with no
+observed deficit failure.  Among the terminal instances with
+$\delta=1,2,3$, the maximum element counts were respectively
+$9,13,20$.  The implementation used brute-force cover enumeration on
+these small inputs; this does not benchmark the bounded search tree
+of Theorem~\ref{thm:main}.
+
+The graph-side enumeration covered all two-connected simple graphs on
+at most nine vertices ($201,727$ graphs).  A separate check of the
+cover argument processed $70$ two-connected graphs and $9,588$
+spanning trees.  These finite checks test the implementations; they
+are not proofs of the lemmas or bounds.
+
+\section{Related work}\label{sec:related}
+For graphic matroids, Harant et al.~\citep{Harant2010} already give
+finite obstruction sets for each deficit $k$ and fixed-parameter
+tractability for edge-disjoint cycle packing below the cyclomatic
+number.  Rautenbach and Regen~\citep{RautenbachRegen2012} treat the
+vertex-disjoint cycle variant.  Theorem~\ref{thm:main} covers
+explicitly represented binary matroids.  For bonds, the cographic
+matroid $M^*(G)$ is binary and has
+$r^*(M^*(G))=r(M(G))=|V(G)|-c(G)$ and
+$\nu(M^*(G))=\nu_{\bond}(G)$.  Hence its FPT conclusion follows
+from Theorem~\ref{thm:main}.  The graph-specific contribution is the
+direct $\tau\leq4\delta_{\bond}$ proof and the $2^{O(k)}$-vertex
+kernel with at most $k$ nontrivial blocks of at most
+$N(k)=4k\,2^{4k-1}$ vertices each.
+
+Caprara, Panconesi, and Rizzi~\citep{Caprara2004} study packing
+cuts.  Since each nonempty cut contains a bond, their cut-packing
+setting and edge-disjoint bond packing have the same maximum packing
+number.  Gutin and Mnich~\citep{GutinMnich2022} survey parameterization
+above and below guaranteed values.  Related matroid packing and
+covering problems appear in~\citep{BernathKiraly2014,Oxley1978,Seymour1980}.
+
+\section{Open problems}
+\sloppy
+The element bound $2^{O(4^k)}$ leaves open whether the binary-matroid
+problem has a single-exponential or polynomial kernel.  For
+two-connected graph blocks, the proved cover bound is
+$\tau\leq4\delta_{\bond}$; enumeration through nine vertices found
+no counterexample to $\tau\leq2\delta_{\bond}$, for which we give no
+proof.  A direction not treated here is profile exchange and
+compression for matroids representable over $GF(q)$ with $q>2$; the binary
+symmetric-difference argument above does not establish that case.
+
+\section*{AI-use disclosure}
+Multiple AI systems assisted with candidate arguments, proof review,
+finite-instance checks, and drafting.  The author takes responsibility
+for the manuscript.
+
+\bibliographystyle{plainnat}
+\bibliography{refs}
+\end{document}

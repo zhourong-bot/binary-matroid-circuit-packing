@@ -1,0 +1,17 @@
+{
+  "stage": "graphs",
+  "version": 1,
+  "classes": 8166,
+  "bases": 2462020,
+  "packing_certificates": 8166,
+  "triggers": 1051,
+  "failures": 0,
+  "max_n_fixed_by_delta": {
+    "1": 12,
+    "2": 13,
+    "3": 14
+  },
+  "counterexamples": [],
+  "family": [],
+  "seconds": 239.335
+}

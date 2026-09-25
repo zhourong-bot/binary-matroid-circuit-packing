@@ -1,0 +1,27 @@
+{
+  "stage": "catalog",
+  "version": 1,
+  "classes": 3766,
+  "bases": 134860,
+  "packing_certificates": 35814,
+  "triggers": 2651,
+  "failures": 0,
+  "triggers_by_delta": {
+    "0": 1386,
+    "1": 1185,
+    "2": 80
+  },
+  "fixed_classes_by_delta": {
+    "1": 801,
+    "2": 1558,
+    "3": 517
+  },
+  "max_n_fixed_by_delta": {
+    "1": 10,
+    "2": 10,
+    "3": 10
+  },
+  "counterexamples": [],
+  "family": [],
+  "seconds": 15.375
+}

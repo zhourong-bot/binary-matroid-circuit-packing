@@ -1,0 +1,84 @@
+{
+  "status": "PASS",
+  "seed": 26092512,
+  "seconds": 4.817740083,
+  "totals": {
+    "instances": 4021,
+    "reductions": 15716,
+    "delta_failures": 0,
+    "catalog_n_0": 1,
+    "independent_packing_checks": 152,
+    "kernel_runs": 8042,
+    "NO_rejected": 2715,
+    "NO_rejected_first": 2715,
+    "catalog_n_1": 2,
+    "rule_R1": 3449,
+    "rule_H1": 2864,
+    "catalog_n_2": 4,
+    "catalog_n_3": 8,
+    "nonminimum_covers": 11422,
+    "nonminimum_nonoptimal_families": 11422,
+    "nonminimum_triggering_covers": 319,
+    "catalog_n_4": 16,
+    "rule_R2": 8031,
+    "catalog_n_5": 32,
+    "catalog_n_6": 68,
+    "NO_retained": 1306,
+    "nonminimum_H1": 1372,
+    "nonminimum_h1_tests": 1372,
+    "nonminimum_nonoptimal_h1_tests": 1372,
+    "catalog_n_7": 148,
+    "catalog_n_8": 342,
+    "catalog_n_9": 848,
+    "catalog_n_10": 2297
+  },
+  "counts": {
+    "catalog": 3766,
+    "random": 192,
+    "structured": 29,
+    "loops_plus_parallel": 18,
+    "cographic": 16
+  },
+  "max_E_by_delta": {
+    "1": {
+      "n": 9,
+      "case": "structured:18",
+      "rows": [
+        297,
+        298,
+        12,
+        48,
+        64,
+        128
+      ]
+    },
+    "2": {
+      "n": 13,
+      "case": "structured:16",
+      "rows": [
+        5553,
+        7458,
+        2196,
+        56,
+        448,
+        1536
+      ]
+    },
+    "3": {
+      "n": 20,
+      "case": "cographic:K4,5",
+      "rows": [
+        1014721,
+        67650,
+        135300,
+        270600,
+        541200,
+        992,
+        31744,
+        1015808
+      ]
+    }
+  },
+  "error": null,
+  "exact_cache": "CacheInfo(hits=45529, misses=5942, maxsize=30000, currsize=5942)"
+}
