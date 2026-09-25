@@ -1,0 +1,10 @@
+{
+  "title": "Packing circuits below the corank: a kernel for binary matroids and edge-disjoint bond packing (paper and computational checks)",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "creators": [{"name": "Zhou, Rong"}],
+  "description": "Preprint and supplementary computational checks. For a binary matroid M, let nu(M) be the maximum number of pairwise element-disjoint circuits and delta(M) = r*(M) - nu(M). We give a polynomial-time kernelization for deciding delta(M) <= k with element bound 2^{O(4^k)}, and a direct treatment of edge-disjoint bond packing in graphs (tau <= 4 delta for two-connected blocks). The repository contains the LaTeX source and PDF of the paper and scripts that test finite instances; these checks are implementation tests, not proofs.",
+  "keywords": ["matroid", "binary matroid", "circuit packing", "cut packing", "parameterized complexity", "kernelization", "fixed-parameter tractability"],
+  "license": "MIT",
+  "language": "eng"
+}
