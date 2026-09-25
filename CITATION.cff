@@ -4,7 +4,9 @@ title: "Packing circuits below the corank: a kernel for binary matroids and edge
 authors:
   - family-names: Zhou
     given-names: Rong
+    orcid: "https://orcid.org/0009-0004-8825-6103"
 type: article
+doi: 10.5281/zenodo.22952617
 license: MIT
 repository-code: "https://github.com/zhourong-bot/binary-matroid-circuit-packing"
 date-released: 2026-09-25

@@ -1,5 +1,8 @@
 # Binary matroid circuit packing: computational checks
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22952617.svg)](https://doi.org/10.5281/zenodo.22952617)
+
+
 This repository accompanies the **Computational verification** section of
 [`paper/main.tex`](paper/main.tex) and the corresponding
 [`paper/main.pdf`](paper/main.pdf). The paper's bibliography is in
@@ -97,3 +100,7 @@ GF(2), use row reduction to canonicalize it, enumerate minimal nonzero words
 as circuits, and compute exact disjoint-circuit packing numbers. `puncture`
 implements contraction in this representation. The graph code enumerates
 bonds as connected bipartitions and computes exact disjoint-bond packings.
+
+## Citation
+
+Rong Zhou, *Packing circuits below the corank: a kernel for binary matroids and edge-disjoint bond packing*, preprint, 2026. Zenodo, doi:[10.5281/zenodo.22952617](https://doi.org/10.5281/zenodo.22952617). ORCID [0009-0004-8825-6103](https://orcid.org/0009-0004-8825-6103).
